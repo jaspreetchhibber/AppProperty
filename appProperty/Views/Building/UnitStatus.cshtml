@@ -1,0 +1,260 @@
+﻿@model appProperty.Models.UnitInOutModel
+@{
+    ViewData["Title"] = "UnitStatus";
+}
+<!-- Off-Canvas Wrapper-->
+<div class="offcanvas-wrapper">
+    <!-- Page Title-->
+    <div class="page-title">
+        <div class="container">
+            <div class="column">
+                <h1>UnitStatus</h1>
+            </div>
+            <div class="column">
+                <ul class="breadcrumbs">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li class="separator">&nbsp;</li>
+                    <li>
+                        <a href="account-orders.html">Building</a>
+                    </li>
+                    <li class="separator">&nbsp;</li>
+                    <li>UnitStatus</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Page Content-->
+    <div class="container padding-bottom-3x mb-2">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="padding-top-2x mt-2 hidden-lg-up"></div>
+                <form class="row" method="post" asp-action="General">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover margin-bottom-none">
+                                <thead>
+                                    <tr>
+                                        <th>Unit Available</th>
+                                        <th>Maintenance Unit</th>
+                                        <th>Unit Occupied</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.SectionList != null)
+                                    {
+                                        @foreach (var item in ViewBag.SectionList)
+                                        {
+                                            <tr>
+                                                <td style="font-weight: 500;">
+                                                    @item.Description
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            var counter = 0;
+                                            @if (ViewBag.AvailableUnitList != null)
+                                            {
+                                                @foreach (var unit in ViewBag.AvailableUnitList)
+                                                {
+                                                    counter = counter + 1;
+
+                                                    @if (counter == 1)
+                                                    {
+                                                        @:<tr id="item.Code">
+                                                            @if (((PropertyDB.Building.CssSection)(item)).Building.Units.Where(x => x.Code == ((PropertyDB.Building.CssUnit)unit).Code) != null && ((PropertyDB.Building.CssUnit)unit).Status.Description.ToLower() == "available")
+                                                            {
+                                                                <td><a href="javascript:" data-toggle="modal" data-target="#loginModal" onclick="setUnitCode(@unit.Code,'@unit.Status.Description.ToLower()')">@unit.Description</a></td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td></td>
+                                                            }
+                                                        }
+                                                    @if (counter == 2)
+                                                    {
+                                                        @if (((PropertyDB.Building.CssSection)(item)).Building.Units.Where(x => x.Code == ((PropertyDB.Building.CssUnit)unit).Code) != null && ((PropertyDB.Building.CssUnit)unit).Status.Description.ToLower() == "maintenance")
+                                                        {
+                                                            <td><a href="javascript:" data-toggle="modal" data-target="#loginModal" onclick="setUnitCode(@unit.Code,'@unit.Status.Description.ToLower()')">@unit.Description</a></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                    }
+                                                    @if (counter == 3)
+                                                    {
+                                                        @if (((PropertyDB.Building.CssSection)(item)).Building.Units.Where(x => x.Code == ((PropertyDB.Building.CssUnit)unit).Code) != null && ((PropertyDB.Building.CssUnit)unit).Status.Description.ToLower() == "unavailable")
+                                                        {
+                                                            <td><a href="javascript:" data-toggle="modal" data-target="#loginModal" onclick="setUnitCode(@unit.Code,'@unit.Status.Description.ToLower()')">@unit.Description</a></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                        counter = 0;
+                                                    @:</tr>
+                                                }
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr class="mt-2 mb-3">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center">
+                            <a class="btn btn-primary margin-right-none" href="/Home/Index">Return</a>
+                            <button class="btn btn-primary margin-right-none" type="Submit">Record</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Login</h4>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row margin-bottom-1x">
+                            <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block facebook-btn" href="#"><i class="socicon-facebook"></i>&nbsp;Facebook login</a></div>
+                            <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block twitter-btn" href="#"><i class="socicon-twitter"></i>&nbsp;Twitter login</a></div>
+                            <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block google-btn" href="#"><i class="socicon-googleplus"></i>&nbsp;Google+ login</a></div>
+                        </div>
+                        <h4 class="margin-bottom-1x">Or using form below</h4>
+                        <span id="spanError"></span>
+                        <div class="form-group input-group">
+                            <input class="form-control" for="Email" id="Email" placeholder="Username" required><span class="input-group-addon"><i class="icon-mail"></i></span>
+                        </div>
+                        <div class="form-group input-group">
+                            <input class="form-control" for="Password" type="password" id="Password" placeholder="Password" required><span class="input-group-addon"><i class="icon-lock"></i></span>
+                        </div>
+                        <div class="d-flex flex-wrap justify-content-between padding-bottom-1x">
+                            <label class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" id="RememberMe" checked><span class="custom-control-indicator"></span><span class="custom-control-description">Remember me</span>
+                            </label>@*<a class="navi-link" href="account-password-recovery.html">Forgot password?</a>*@
+                        </div>
+                        <div class="text-center text-sm-right">
+                            <button class="btn btn-primary margin-bottom-none" type="button" onclick="checkLogin()">Login</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="StatusModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Change Status</h4>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form method="post" asp-action="UnitStatus">
+                        <input type="hidden" asp-for="UnitCode" />
+                        <input type="hidden" asp-for="UserCode" />
+                        <input type="hidden" asp-for="StatusCode" />
+                        <div class="col-lg-12">
+                            @if (ViewBag.StatusList != null)
+                            {
+                                @foreach (var item in ViewBag.StatusList)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="custom-control custom-radio">
+                                                <input class="custom-control-input @item.Description" type="radio" id="@item.Code" name="status"><span class="custom-control-indicator"></span><span class="custom-control-description">@item.Description</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <div class="text-center text-sm-right">
+                                <button class="btn btn-primary margin-bottom-none" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        $(function () {
+            $("input[name='status']").on('change', function () {
+                if ($(this).prop("checked") == true) {
+                    var status = this.id;
+                    $("#StatusCode").val(status);
+                }
+                else if ($(this).prop("checked") == false) {
+                }
+            });
+        });
+        function setUnitCode(unitCode, status) {
+            $("#UnitCode").val(unitCode);
+            if (status === "available") {
+                $(".Available").attr('checked', 'true');
+            }
+            else if (status === "maintenance") {
+                $(".Maintenance").attr('checked', 'true');
+            }
+            else if (status === "occupied") {
+                $(".Occupied").attr('checked', 'true');
+            }
+        }
+        function checkLogin() {
+            var value = $("#RememberMe").val();
+            var rememberme;
+            if (value === "on") {
+                rememberme = true;
+            }
+            else {
+                rememberme = false;
+            }
+            var email = $("#Email").val();
+            var password = $("#Password").val();
+            let LoginViewModel = {
+                Email: email,
+                Password: password,
+                RememberMe: rememberme
+            };
+            fetch('Login', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(LoginViewModel)
+            })
+                .then(response => response.json())
+                .then(json => {
+                    if (json.error) {
+                        $("#spanError").innerText = json.error;
+                    }
+                    if (json.result) {
+                        $("#loginModal").modal().hide();
+                        $("#StatusModal").modal().show();
+                        if (json.user) {
+                            $("#UserCode").val(json.user.code);
+                        }
+                    }
+                })
+                .catch(error => alert(error));
+        }
+    </script>
+}

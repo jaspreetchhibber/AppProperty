@@ -1,0 +1,93 @@
+﻿@model appProperty.Models.AddressViewModel
+@{
+    ViewData["Title"] = "AddAddress";
+    Layout = "_LayoutHome";
+}
+
+<!-- Page Title-->
+<div class="page-title">
+    <div class="container">
+        <div class="column">
+            <h1>Add Address</h1>
+        </div>
+        <div class="column">
+            <ul class="breadcrumbs">
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="separator">&nbsp;</li>
+                <li>
+                    <a href="account-orders.html">Admin</a>
+                </li>
+                <li class="separator">&nbsp;</li>
+                <li>Address</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Page Content-->
+<div class="container padding-bottom-3x mb-2">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="padding-top-2x mt-2 hidden-lg-up"></div>
+            <form class="row" method="post" asp-action="AddAddress">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ContinentCode"></label>
+                        <select class="form-control" asp-for="ContinentCode" name="ContinentCode">
+                            @if (ViewBag.Cities != null)
+                            {
+                                @foreach (var item in ViewBag.Cities)
+                                {
+                                    <option value="@item.Code">@item.City</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="RegionCode"></label>
+                        <select class="form-control" asp-for="RegionCode" name="RegionCode">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="CountryCode"></label>
+                        <select class="form-control" asp-for="CountryCode" name="CountryCode">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="StateCode"></label>
+                        <select class="form-control" asp-for="StateCode" name="StateCode">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="CityCode"></label>
+                        <select class="form-control" asp-for="CityCode" name="City">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Address"></label>
+                        <input class="form-control" type="text" asp-for="Address">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <hr class="mt-2 mb-3">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                        <a class="btn btn-primary margin-right-none" href="/Home/Index">Return</a>
+                        <button class="btn btn-primary margin-right-none" type="Submit">Record</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
